@@ -8,3 +8,4 @@ prometheus_api_client
 boto3
 fastapi
 uvicorn
+logging

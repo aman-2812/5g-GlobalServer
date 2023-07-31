@@ -3,9 +3,8 @@ from fastapi import FastAPI
 
 import global_server_average
 import global_server_median
-
+from logger_config import logger
 app = FastAPI()
-
 
 @app.get("/")
 async def root():
@@ -14,14 +13,14 @@ async def root():
 
 @app.get("/initiate_fl_average")
 async def initiate_process_average():
-    print("Initiated FL type - Average")
+    logger.info("Initiated FL type - Average")
     global_server_average.run_global_server()
     return {"message": "Average FL completed. Check log for more details"}
 
 
 @app.get("/initiate_fl_median")
 async def initiate_process_median():
-    print("Initiated FL type - Median")
+    logger.info("Initiated FL type - Median")
     global_server_median.run_global_server()
     return {"message": "Median FL completed. Check log for more details"}
 
