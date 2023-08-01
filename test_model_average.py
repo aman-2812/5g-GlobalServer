@@ -33,7 +33,7 @@ def ts_mlflow_test(data,model, in_look_back, in_batch_size):
     logger.info('Train Score: %.2f MAPE' % (100 - MAPE))
 
 
-def test_model_median():
+def test_model_average():
     Mbits_transmitted_test = []
     comm_rounds=4
     # For testing the performance of the model.
@@ -46,7 +46,7 @@ def test_model_median():
     data = np.array(Mbits_transmitted_test)
     from keras.models import load_model
     for comm_round in range(0, comm_rounds):
-        name = "median_model" + str(comm_round) + ".h5"
+        name = "avg_model" + str(comm_round) + ".h5"
         logger.info(f"Reading file - {name}")
         model = load_model(name)
         ts_mlflow_test(data, model, 20, 16)
