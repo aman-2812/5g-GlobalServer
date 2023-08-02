@@ -51,11 +51,11 @@ def run_global_server():
         global_weights = global_model.get_weights()
         Local_FRA = get_local_weight.get_weights(FRA_URL, global_weights)
         logger.info(f"Loaded response from Client - {Local_FRA[0]}")
-        Local_PARIS = get_local_weight.get_weights(PARIS_URL, global_weights)
-        logger.info(f"Loaded response from Client - {Local_PARIS[0]}")
-        LOCAL_STHLM = get_local_weight.get_weights(STHLM_URL, global_weights)
-        logger.info(f"Loaded response from Client - {LOCAL_STHLM[0]}")
-        Clients = [Local_FRA, Local_PARIS, LOCAL_STHLM]
+        #Local_PARIS = get_local_weight.get_weights(PARIS_URL, global_weights)
+        #logger.info(f"Loaded response from Client - {Local_PARIS[0]}")
+        #LOCAL_STHLM = get_local_weight.get_weights(STHLM_URL, global_weights)
+        #logger.info(f"Loaded response from Client - {LOCAL_STHLM[0]}")
+        Clients = [Local_FRA]
         Client_name = [i[0] for i in Clients]
         Client_length = [i[1] for i in Clients]
         Client_weights = [i[2] for i in Clients]
