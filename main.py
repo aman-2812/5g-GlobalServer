@@ -39,4 +39,4 @@ async def test_median():
     return {"message": "Median test FL completed. Check log for more details"}
 
 if __name__ == "__main__":
-    uvicorn.run(app, host="127.0.0.1", port=8050)
+    uvicorn.run(app, host="0.0.0.0", port=8050)

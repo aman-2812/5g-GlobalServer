@@ -42,19 +42,19 @@ def run_global_server():
     global_model = smlp_global.build()
     # commence global training loop
     comms_round = 4
-    FRA_URL = "http://10.192.20.156:8000/local_training"
-    PARIS_URL = "http://15.237.196.132:8010/local_training"
-    STHLM_URL = "http://16.170.148.134:8020/local_training"
+    FRA_URL = "http://10.192.20.110:8000/local_training"
+    PARIS_URL = "http://192.168.11.4:8010/local_training"
+    STHLM_URL = "http://10.0.10.75:8020/local_training"
     for comm_round in range(comms_round):
         # get global weights
         global_weights = global_model.get_weights()
         Local_FRA = get_local_weight.get_weights(FRA_URL, global_weights)
         logger.info(f"Loaded response from Client - {Local_FRA[0]}")
-        #Local_PARIS = get_local_weight.get_weights(PARIS_URL, global_weights)
-        #logger.info(f"Loaded response from Client - {Local_PARIS[0]}")
-        #LOCAL_STHLM = get_local_weight.get_weights(STHLM_URL, global_weights)
-        #logger.info(f"Loaded response from Client - {LOCAL_STHLM[0]}")
-        Clients = [Local_FRA]
+        Local_PARIS = get_local_weight.get_weights(PARIS_URL, global_weights)
+        logger.info(f"Loaded response from Client - {Local_PARIS[0]}")
+        LOCAL_STHLM = get_local_weight.get_weights(STHLM_URL, global_weights)
+        logger.info(f"Loaded response from Client - {LOCAL_STHLM[0]}")
+        Clients = [Local_FRA, Local_PARIS, LOCAL_STHLM]
         Client_name = [i[0] for i in Clients]
         Client_length = [i[1] for i in Clients]
         Client_weights = [i[2] for i in Clients]
