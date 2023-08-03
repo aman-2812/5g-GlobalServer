@@ -5,8 +5,8 @@ from datetime import datetime
 # Get today's date in the format YYYY-MM-DD
 current_datetime = datetime.now()
 
-# Format the date and time as a string (YYYY-MM-DD_HH-MM-SS)
-formatted_datetime = current_datetime.strftime('%Y-%m-%d_%H-%M-%S')
+# Format the date and time as a string (YYYY-MM-DD)
+formatted_datetime = current_datetime.strftime('%d-%m-%Y')
 
 def upload_file_to_s3(name):
     # Set your AWS credentials (if not set via environment variables or IAM role)
