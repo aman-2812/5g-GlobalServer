@@ -42,7 +42,7 @@ def run_global_server():
     smlp_global = SimpleMLP()
     global_model = smlp_global.build()
     # commence global training loop
-    comms_round = 1
+    comms_round = 100
     FRA_URL = "http://10.192.20.110:8000/local_training"
     PARIS_URL = "http://192.168.11.4:8010/local_training"
     STHLM_URL = "http://10.0.10.75:8020/local_training"
