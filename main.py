@@ -31,7 +31,7 @@ async def initiate_process_median():
 @app.get("/test_model/average")
 async def test_average():
     logger.info("Initiated testing FL type - Average")
-    test_model.test_model("average")
+    test_model.test_model("avg")
     return {"message": "Average test FL completed. Check log for more details"}
 
 
