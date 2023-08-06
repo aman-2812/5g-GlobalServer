@@ -1,8 +1,8 @@
-
 import tensorflow as tf
 import numpy as np
 import csv
 import download_from_s3
+import upload_to_s3
 from logger_config import logger
 import pandas as pd
 
@@ -39,7 +39,10 @@ def ts_mlflow_test(data,model, in_look_back, in_batch_size, df, comm_round):
 
 def test_model(type):
     Mbits_transmitted_test = []
-    comm_rounds=100
+    comm_rounds = 100
+
+    bucket_name = "fra-5g-nw"
+    test_result_file_path = f'test_score_{type}_{bucket_name}.csv'
 
     # Define an empty dictionary with column names
     columns = {
@@ -48,11 +51,9 @@ def test_model(type):
         'MAPE': []
     }
 
-    region="fra"
     # Create the empty DataFrame
     df = pd.DataFrame(columns)
-    s3_object_key = f'test_model/{region}/Traffic_Test_Data.csv'
-    download_from_s3.download_file_from_s3("fra-5g-nw-global",s3_object_key,"Traffic_Test_Data.csv")
+    download_from_s3.download_file_from_s3(bucket_name, "Traffic_Test_Data.csv", "Traffic_Test_Data.csv")
 
     # For testing the performance of the model.
     with open('./Traffic_Test_Data.csv') as csvfile:
@@ -65,10 +66,11 @@ def test_model(type):
     from keras.models import load_model
     for comm_round in range(0, comm_rounds):
         name = str(type) + "_model" + str(comm_round) + ".h5"
+        download_from_s3.download_file_from_s3("fra-5g-nw-global", f"models/{type}/{name}", name)
         logger.info(f"Reading file - {name}")
         model = load_model(name)
         df = ts_mlflow_test(data, model, 20, 16, df, comm_round)
-    file_path = f'test_score_{type}.csv'
-    logger.info(f"Adding test result to file - {file_path}")
-    # Write the DataFrame to the CSV file
-    df.to_csv(file_path, index=False)
+        # Write the DataFrame to the CSV file
+        logger.info(f"Adding test result to file - {test_result_file_path}")
+        df.to_csv(test_result_file_path, index=False)
+    upload_to_s3.upload_file_to_s3(bucket_name, test_result_file_path, "test_score")

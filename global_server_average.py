@@ -4,6 +4,7 @@ import tensorflow as tf
 import numpy as np
 import get_local_weight
 import upload_to_s3
+from datetime import datetime
 
 
 def scale_model_weights(weight, scalar):
@@ -46,6 +47,15 @@ def run_global_server():
     FRA_URL = "http://10.192.20.110:8000/local_training"
     PARIS_URL = "http://192.168.11.4:8010/local_training"
     STHLM_URL = "http://10.0.10.75:8020/local_training"
+    model_upload_bucket_name = 'fra-5g-nw-global'
+
+    # Get today's date in the format YYYY-MM-DD
+    current_datetime = datetime.now()
+    # Format the date and time as a string (YYYY-MM-DD_HH-MM-SS)
+    formatted_datetime = current_datetime.strftime('%d-%m-%Y_%H:%M:%S')
+    directory_name = f'{formatted_datetime}'
+    model_upload_bucket_name = 'fra-5g-nw-global'
+
     for comm_round in range(comms_round):
         # get global weights
         global_weights = global_model.get_weights()
@@ -76,5 +86,5 @@ def run_global_server():
         logger.info(f"Round number {comm_round} completed!")
         logger.info(f"Saving file - {name}")
         global_model.save(name)
-        upload_to_s3.upload_file_to_s3(name)
+        upload_to_s3.upload_file_to_s3(model_upload_bucket_name, name, directory_name)
     logger.info(f"Completed all {comms_round} of training")
