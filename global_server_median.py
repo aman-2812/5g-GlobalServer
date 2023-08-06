@@ -1,10 +1,13 @@
 # Packages Required
-from logger_config import logger
-import tensorflow as tf
+from datetime import datetime
+
 import numpy as np
+import tensorflow as tf
+
 import get_local_weight
 import upload_to_s3
-from datetime import datetime
+from logger_config import logger
+
 
 def scale_model_weights(weight, scalar):
     '''function for scaling a models weights'''
@@ -25,14 +28,16 @@ def median_weights(weight_list):
         avg_grad.append(layer_mean)
     return avg_grad
 
+
 class SimpleMLP:
     @staticmethod
     def build():
         tf.random.set_seed(51)
         np.random.seed(51)
-        model = tf.keras.models.Sequential([ tf.keras.layers.Lambda(lambda x: tf.expand_dims(x, axis=-1),
-                                           input_shape=[None]), tf.keras.layers.SimpleRNN(400, return_sequences=True),
-                                           tf.keras.layers.SimpleRNN(400), tf.keras.layers.Dense(1), ])
+        model = tf.keras.models.Sequential([tf.keras.layers.Lambda(lambda x: tf.expand_dims(x, axis=-1),
+                                                                   input_shape=[None]),
+                                            tf.keras.layers.SimpleRNN(400, return_sequences=True),
+                                            tf.keras.layers.SimpleRNN(400), tf.keras.layers.Dense(1), ])
         return model
 
 

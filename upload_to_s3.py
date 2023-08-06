@@ -1,5 +1,7 @@
 import boto3
+
 from logger_config import logger
+
 
 def upload_file_to_s3(bucket_name, object_name, directory_name):
     # Create an S3 client

@@ -1,10 +1,12 @@
 # Packages Required
-from logger_config import logger
-import tensorflow as tf
+from datetime import datetime
+
 import numpy as np
+import tensorflow as tf
+
 import get_local_weight
 import upload_to_s3
-from datetime import datetime
+from logger_config import logger
 
 
 def scale_model_weights(weight, scalar):
@@ -16,25 +18,26 @@ def scale_model_weights(weight, scalar):
     return weight_final
 
 
-
 def sum_scaled_weights(scaled_weight_list):
     '''Return the sum of the listed scaled weights. The is equivalent to scaled avg of the weights'''
     avg_grad = list()
-    #get the average grad accross all client gradients
+    # get the average grad accross all client gradients
     for grad_list_tuple in zip(*scaled_weight_list):
         layer_mean = tf.math.reduce_sum(grad_list_tuple, axis=0)
         avg_grad.append(layer_mean)
 
     return avg_grad
 
+
 class SimpleMLP:
     @staticmethod
     def build():
         tf.random.set_seed(51)
         np.random.seed(51)
-        model = tf.keras.models.Sequential([ tf.keras.layers.Lambda(lambda x: tf.expand_dims(x, axis=-1),
-                                           input_shape=[None]), tf.keras.layers.SimpleRNN(400, return_sequences=True),
-                                           tf.keras.layers.SimpleRNN(400), tf.keras.layers.Dense(1), ])
+        model = tf.keras.models.Sequential([tf.keras.layers.Lambda(lambda x: tf.expand_dims(x, axis=-1),
+                                                                   input_shape=[None]),
+                                            tf.keras.layers.SimpleRNN(400, return_sequences=True),
+                                            tf.keras.layers.SimpleRNN(400), tf.keras.layers.Dense(1), ])
         return model
 
 

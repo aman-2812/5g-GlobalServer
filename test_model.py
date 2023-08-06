@@ -1,10 +1,13 @@
-import tensorflow as tf
-import numpy as np
 import csv
+
+import numpy as np
+import pandas as pd
+import tensorflow as tf
+
 import download_from_s3
 import upload_to_s3
 from logger_config import logger
-import pandas as pd
+
 
 def windowed_dataset(client_data, window_size, batch_size, shuffle_buffer):
     dataset = tf.data.Dataset.from_tensor_slices(client_data)
@@ -14,20 +17,21 @@ def windowed_dataset(client_data, window_size, batch_size, shuffle_buffer):
     dataset = dataset.batch(batch_size).prefetch(1)
     return dataset
 
-def ts_mlflow_test(data,model, in_look_back, in_batch_size, df, comm_round):
+
+def ts_mlflow_test(data, model, in_look_back, in_batch_size, df, comm_round):
     tf.random.set_seed(7)
     dataset = data
-    #dataset = windowed_dataset(data, 20, 16, len(data))
+    # dataset = windowed_dataset(data, 20, 16, len(data))
     window_size = 20
     series_trans = dataset
     forecast = []
-    for time in range(len(series_trans)-window_size):
+    for time in range(len(series_trans) - window_size):
         forecast.append(model.predict(series_trans[time:time + window_size][np.newaxis]))
     forecast = forecast[:]
     results = np.array(forecast)[:, 0, 0]
     MSE = tf.keras.metrics.mean_squared_error(series_trans[window_size:len(series_trans)], results).numpy()
     MAPE = tf.keras.metrics.mean_absolute_percentage_error(series_trans[window_size:len(series_trans)], results).numpy()
-    T=[]
+    T = []
     a = 200
     for i in range(a):
         T.append(forecast[i][0][0])
@@ -36,6 +40,7 @@ def ts_mlflow_test(data,model, in_look_back, in_batch_size, df, comm_round):
     df.loc[len(df)] = {'comm_rounds': comm_round, 'RMSE': MSE, 'MAPE': (100 - MAPE)}
     logger.info(f"Added to dataframe - comm_rounds: {comm_round}, RMSE: {MSE}, MAPE: {(100 - MAPE)}")
     return df
+
 
 def test_model(type):
     Mbits_transmitted_test = []

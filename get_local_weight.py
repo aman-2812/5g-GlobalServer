@@ -1,7 +1,9 @@
-from logger_config import logger
-import requests
-import pickle
 import base64
+import pickle
+
+import requests
+
+from logger_config import logger
 
 
 def get_weights(url, global_weights):
