@@ -74,6 +74,7 @@ def run_global_server():
         global_model.set_weights(average_weights)
         name = "avg_model" + str(comm_round) + ".h5"
         logger.info(f"Round number {comm_round} completed!")
+        logger.info(f"Saving file - {name}")
         global_model.save(name)
         upload_to_s3.upload_file_to_s3(name)
     logger.info(f"Completed all {comms_round} of training")
