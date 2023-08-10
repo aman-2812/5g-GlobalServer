@@ -31,10 +31,6 @@ def ts_mlflow_test(data, model, in_look_back, in_batch_size, df, comm_round):
     results = np.array(forecast)[:, 0, 0]
     MSE = tf.keras.metrics.mean_squared_error(series_trans[window_size:len(series_trans)], results).numpy()
     MAPE = tf.keras.metrics.mean_absolute_percentage_error(series_trans[window_size:len(series_trans)], results).numpy()
-    T = []
-    a = 200
-    for i in range(a):
-        T.append(forecast[i][0][0])
     logger.info('Train Score: %.2f RMSE' % (MSE))
     logger.info('Train Score: %.2f MAPE' % (100 - MAPE))
     df.loc[len(df)] = {'comm_rounds': comm_round, 'RMSE': MSE, 'MAPE': (100 - MAPE)}
